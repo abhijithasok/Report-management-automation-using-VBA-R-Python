@@ -14,14 +14,13 @@ The data-based challenges in creating the workbook can be roughly outlined as fo
 1. The same item could have been purchased in different units(eg: kg, quintal) in different purchases over the past year. The unit prices would be altered accordingly in the incoming data, thereby making a direct filter and plot error-prone.
 2. Some items could be purchased as different forms of quantity(eg: cement, purchased by weight and purchased by volume). Even though they may have different units in the incoming data, the purchases of different forms of quantity are to be treated differently.
 
-The workflow for this automation is as follows:
------------------ Daily loop at around a specific time ----------------------------------------------------
+The workflow for this automation is as follows(on a daily loop):
 1. Retrieve the xls file from the corresponding e-mail
 2. Convert the xls file to csv (optional step, but it eases the compatibility with R)
 3. Perform operations and generate the output workbook and figures in the required format
 4. Compress the figures and the original data(so that they fit well into an e-mail
 5. Send the e-mail
------------------------------------------------------------------------------------------------------------
+
 
 The tool usage is as follows:
 1. VB code on Microsoft Outlook that identifies an e-mail with a specific header(that also contains the date of that particular day) and downloads the attachment along with it into a specified folder.
@@ -34,10 +33,11 @@ The tool usage is as follows:
       forms of quantity
       
    The R script generates a workbook of 2 tabs - one containing the list of items purchased on the previous day with an average past  
-   price higher then the past 1 year average(now, error-free) and the second, the list of items in the same context whose price is lower    than the past one year average.
-   
-   The R script also generates time-based line plots for each of the items in these tabs of the workbook.
+   price higher then the past 1 year average(now, error-free) and the second, the list of items in the same context whose price is lower    than the past one year average. The R script also generates time-based line plots for each of the items in these tabs of the  
+   workbook.
 4. Python script that takes in the original raw data downloaded from the e-mail by the VB Script, as well as the folders that contain
    the figures generated through the R script and compresses both, saving them into the same folders.
 5. R script that creates an e-mail Outlook object and sends an e-mail to specified recipients with the compressed original data,  
    compressed figures(plots) as well as the Increase/Decrease workbook as attachments.
+
+These 5 scripts/codes, are scheduled one after the other on Windows Task Scheduler for around 11 a.m. everyday, to keep the flow fully automated.
