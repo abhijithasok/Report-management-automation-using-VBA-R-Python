@@ -1,0 +1,10 @@
+Private Sub Workbook_Open()
+    Workbooks.Open Filename:="C:\Users\abhijithasok\Documents\Purchase Daily Dashboards\Raw Data\OMX_PO_ITEM_RATE_ALT_" & UCase(Format(Date, "dd-mmm-yyyy")) & ".xls" 'name & location of original sheet. The name of the file is a standard string, followed by the current Date.
+    ActiveWorkbook.SaveAs Filename:="C:\Users\abhijithasok\Documents\Purchase Daily Dashboards\Raw Data\OMX_PO_ITEM_RATE_ALT_" & UCase(Format(Date, "dd-mmm-yyyy")) & ".csv", _
+        FileFormat:=xlCSV, CreateBackup:=False 'name & location of required CSV
+    ActiveWindow.Close False
+    ThisWorkbook.Close False
+End Sub
+
+
+

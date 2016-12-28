@@ -1,0 +1,59 @@
+Public Sub Extract_Outlook_Email_Attachments()
+
+    Dim OutlookOpened As Boolean
+    Dim outApp As Outlook.Application
+    Dim outNs As Outlook.NameSpace
+    Dim outFolder As Outlook.MAPIFolder
+    Dim outAttachment As Outlook.Attachment
+    Dim outItem As Object
+    Dim outMailItem As Outlook.MailItem
+    Dim inputDate As String, subjectFilter As String
+    Dim saveInFolder As String
+    
+    saveInFolder = "C:\Users\abhijithasok\Documents\Purchase Daily Dashboards\Raw Data\"                                 'CHANGE FOLDER PATH AS NEEDED
+    If Right(saveInFolder, 1) <> "\" Then saveInFolder = saveInFolder & "\"
+    
+    inputDate = InputBox("Enter date to filter the email subject", "Extract Outlook email attachments")
+    If inputDate = "" Then Exit Sub
+    
+    subjectFilter = "Daily Purchase Item Price detail for Last 1 Year"
+    
+    'Get or create Outlook object and make sure it exists before continuing
+    
+    OutlookOpened = False
+    On Error Resume Next
+    Set outApp = GetObject(, "Outlook.Application")
+    If Err.Number <> 0 Then
+        Set outApp = New Outlook.Application
+        OutlookOpened = True
+    End If
+    On Error GoTo 0
+    
+    If outApp Is Nothing Then
+        MsgBox "Cannot start Outlook.", vbExclamation
+        Exit Sub
+    End If
+    
+    Set outNs = outApp.GetNamespace("MAPI")
+    
+    Set outFolder = outNs.Folders("Personal Folders").Folders("Inbox")  'CHANGE FOLDER AS NEEDED
+
+    If Not outFolder Is Nothing Then
+        For Each outItem In outFolder.Items
+            If outItem.Class = Outlook.OlObjectClass.olMail Then
+                Set outMailItem = outItem
+                If outMailItem.Subject = subjectFilter Then
+                    Debug.Print outMailItem.Subject
+                    For Each outAttachment In outMailItem.Attachments
+                        outAttachment.SaveAsFile saveInFolder & outAttachment.FileName
+                    Next
+                End If
+            End If
+        Next
+    End If
+
+    If OutlookOpened Then outApp.Quit
+    
+    Set outApp = Nothing
+
+End Sub
